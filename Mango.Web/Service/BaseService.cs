@@ -25,9 +25,18 @@ namespace Mango.Web.Service
                 message.Headers.Add("Accept", "application/json");
                 //token
 
+                if (string.IsNullOrWhiteSpace(requestDTO.Url))
+                {
+                    return new ResponseDTO()
+                    {
+                        Message = "Request URL is null or empty",
+                        IsSuccess = false
+                    };
+                }
+
                 message.RequestUri = new Uri(requestDTO.Url);
 
-                if (message.RequestUri != null)
+                if (requestDTO.Data != null)
                 {
                     message.Content = new StringContent(JsonConvert.SerializeObject(requestDTO.Data), Encoding.UTF8, "application/json");
                 }
