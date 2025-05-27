@@ -1,5 +1,4 @@
-﻿using Mango.Services.AuthAPI.Data;
-using Mango.Services.AuthAPI.Models;
+﻿using Mango.Services.AuthAPI.Models;
 using Mango.Services.AuthAPI.Models.Dto;
 using Mango.Services.AuthAPI.Repositories.Interfaces;
 using Mango.Services.AuthAPI.Service.Interfaces;
@@ -22,7 +21,32 @@ namespace Mango.Services.AuthAPI.Service
 
         public async Task<LoginResponseDTO> Login(LoginRequestDTO requestDTO)
         {
-            throw new NotImplementedException();
+            var user = await _authRepository.GetApplicationUserByUserNameAsync(requestDTO.UserName);
+
+            var isValid = await _userManager.CheckPasswordAsync(user, requestDTO.Password);
+
+            if (user == null || !isValid)
+            {
+                return new LoginResponseDTO();
+            }
+
+            //If user was found, Generate JWT Token
+
+            var userDTO = new UserDTO
+            {
+                Email = user.Email,
+                ID = user.Id,
+                Name = user.Name,
+                PhoneNumber = user.PhoneNumber,
+            };
+
+            var loginReponse = new LoginResponseDTO()
+            {
+                User = userDTO,
+                Token = ""
+            };
+
+            return loginReponse;
         }
 
         public async Task<string> Register(RegistrationRequestDTO requestDTO)

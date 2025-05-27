@@ -15,5 +15,6 @@ namespace Mango.Services.AuthAPI.Repositories
         }
 
         public async Task<ApplicationUser> GetApplicationUserByEmailAsync(string email) => await _appDbContext.ApplicationUsers.FirstOrDefaultAsync(u => u.Email == email);
+        public async Task<ApplicationUser> GetApplicationUserByUserNameAsync(string userName) => await _appDbContext.ApplicationUsers.FirstOrDefaultAsync(u => u.UserName.ToLower() == userName.ToLower());
     }
 }
